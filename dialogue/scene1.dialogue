@@ -1,0 +1,10 @@
+using GameState
+
+~ start
+Narrator: Well? Make your decision.
+- Feathers
+	do setC1("feathers")
+- Goat
+	do setC1("goat")
+Really? 
+=> END
