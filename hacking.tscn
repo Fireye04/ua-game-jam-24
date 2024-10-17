@@ -1,21 +1,75 @@
-[gd_scene load_steps=3 format=3 uid="uid://btrgv0iebethr"]
+[gd_scene load_steps=6 format=3 uid="uid://btrgv0iebethr"]
 
 [ext_resource type="Script" path="res://Hacking.cs" id="1_s3sfv"]
 [ext_resource type="Script" path="res://timerLabel.cs" id="2_x7tt2"]
+[ext_resource type="Script" path="res://ProgressBar.cs" id="3_s21s3"]
+[ext_resource type="Script" path="res://ButtonGrid.cs" id="4_8tavl"]
+[ext_resource type="PackedScene" uid="uid://04rlk5jp3sdq" path="res://interface_button.tscn" id="5_jdpal"]
 
 [node name="Hacking" type="Node2D"]
 script = ExtResource("1_s3sfv")
 
-[node name="Timer" type="Timer" parent="."]
-autostart = true
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
 
-[node name="Label" type="Label" parent="." node_paths=PackedStringArray("timer")]
-offset_left = 28.0
-offset_top = 23.0
-offset_right = 68.0
-offset_bottom = 46.0
+[node name="Game" type="HBoxContainer" parent="CanvasLayer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Game"]
+layout_mode = 2
+
+[node name="TimerMargin" type="MarginContainer" parent="CanvasLayer/Game/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="Timer" type="Label" parent="CanvasLayer/Game/VBoxContainer/TimerMargin" node_paths=PackedStringArray("timer")]
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+size_flags_horizontal = 4
 script = ExtResource("2_x7tt2")
 duration = 100
-timer = NodePath("../Timer")
+timer = NodePath("Timer")
 
-[connection signal="timeout" from="Timer" to="Label" method="_on_timer_timeout"]
+[node name="Timer" type="Timer" parent="CanvasLayer/Game/VBoxContainer/TimerMargin/Timer"]
+autostart = true
+
+[node name="RamMargin" type="MarginContainer" parent="CanvasLayer/Game/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Game/VBoxContainer/RamMargin"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="ProgressBar" type="ProgressBar" parent="CanvasLayer/Game/VBoxContainer/RamMargin/VBoxContainer"]
+custom_minimum_size = Vector2(0, 500)
+layout_mode = 2
+fill_mode = 3
+script = ExtResource("3_s21s3")
+
+[node name="Button" type="Button" parent="CanvasLayer/Game/VBoxContainer/RamMargin/VBoxContainer"]
+layout_mode = 2
+text = "Download More RAM"
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/Game"]
+layout_mode = 2
+theme_override_constants/margin_left = 70
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+
+[node name="ButtonGrid" type="GridContainer" parent="CanvasLayer/Game/MarginContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 6
+script = ExtResource("4_8tavl")
+button = ExtResource("5_jdpal")
+
+[connection signal="DurationComplete" from="CanvasLayer/Game/VBoxContainer/TimerMargin/Timer" to="." method="_on_label_duration_complete"]
+[connection signal="timeout" from="CanvasLayer/Game/VBoxContainer/TimerMargin/Timer/Timer" to="CanvasLayer/Game/VBoxContainer/TimerMargin/Timer" method="_on_timer_timeout"]
+[connection signal="button_down" from="CanvasLayer/Game/VBoxContainer/RamMargin/VBoxContainer/Button" to="CanvasLayer/Game/VBoxContainer/RamMargin/VBoxContainer/ProgressBar" method="_on_button_button_down"]
